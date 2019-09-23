@@ -5,6 +5,7 @@ FactoryGirl.define do
     full_name       { Faker::Name.name }
     loyalty_tier    { 'standard' }
     home_currency   { 'SGD' }
+    date_of_birth   { Date.today }
   end
 
   factory :gold_tier_user, parent: :user do
