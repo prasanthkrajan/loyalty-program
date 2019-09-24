@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 describe API::V1::LoyaltyPoints do
-  let!(:merchant)            { create(:merchant) }
   let!(:standard_tier_user)  { create(:standard_tier_user) }
-  let!(:transaction_amount)  { standard_tier_user.merchant_transactions.sum(:amount).to_i }
+  let!(:merchant)            { standard_tier_user.merchant_transactions.last.merchant }
+  let!(:transaction_amount)  { standard_tier_user.merchant_transactions.where(merchant_id: merchant.id).sum(:amount).to_i }
   let!(:current_points)      { standard_tier_user.points.sum(:points_earned).to_i }
 
   describe 'POST /api/loyalty_points' do

@@ -18,7 +18,8 @@ module API
 
       def current_user
         return nil unless email_from_token.present?
-        @current_user ||= User.find_by(email: email_from_token)
+        user = User.find_by(email: email_from_token) || Merchant.find_by(email: email_from_token)
+        @current_user ||= user
       end
     end
 
