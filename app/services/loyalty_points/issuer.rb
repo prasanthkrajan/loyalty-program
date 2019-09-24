@@ -26,6 +26,7 @@ class LoyaltyPoints::Issuer
   private
 
   def issue_points
+    return if points_earned.zero?
     @points_log = PointsLog.create!(points_earned: points_earned,
                                     issued_by: merchant.id,
                                     user_id: end_user.id,
@@ -45,6 +46,7 @@ class LoyaltyPoints::Issuer
   end
 
   def transaction_amount_with_merchant
+    return 0 unless end_user.present?
     end_user.merchant_transactions.where(merchant_id: merchant.id).sum(:amount).to_i
   end
 end
