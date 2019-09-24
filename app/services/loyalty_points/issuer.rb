@@ -4,7 +4,8 @@ class LoyaltyPoints::Issuer
   attr_accessor :points_log
   attr_reader :params, :merchant
 
-  POINTS_CONVERSION = 0.1
+  LOCAL_POINTS_CONVERSION = 0.1
+  FOREIGN_POINTS_CONVERSION = 0.2
 
   validate :end_user_present
 
@@ -42,11 +43,24 @@ class LoyaltyPoints::Issuer
   end
 
   def points_earned
-    (transaction_amount_with_merchant * POINTS_CONVERSION).to_i
+    local_transaction_points + foreign_transaction_points
   end
 
-  def transaction_amount_with_merchant
+  def local_transaction_points
+    (local_transaction_amount_with_merchant * LOCAL_POINTS_CONVERSION).to_i
+  end
+
+  def foreign_transaction_points
+    (foreign_transaction_amount_with_merchant * FOREIGN_POINTS_CONVERSION).to_i
+  end
+
+  def local_transaction_amount_with_merchant
     return 0 unless end_user.present?
-    end_user.merchant_transactions.where(merchant_id: merchant.id).sum(:amount).to_i
+    end_user.merchant_transactions.where(merchant_id: merchant.id, currency: end_user.home_currency).sum(:amount).to_i
+  end
+
+  def foreign_transaction_amount_with_merchant
+    return 0 unless end_user.present?
+    end_user.merchant_transactions.where(merchant_id: merchant.id).where.not(currency: [nil,end_user.home_currency]).sum(:amount).to_i
   end
 end
