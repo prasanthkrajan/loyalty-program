@@ -2,10 +2,6 @@ require 'rails_helper'
 
 describe API::V1::Rewards do
 
-  after :all do
-    DatabaseCleaner.clean
-  end
-
   let!(:gold_tier_user_one)     { create(:gold_tier_user) }
   let!(:gold_tier_user_two)     { create(:gold_tier_user) }
   let!(:standard_tier_user)     { create(:standard_tier_user) }
