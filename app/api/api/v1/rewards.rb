@@ -5,8 +5,13 @@ module API::V1
 
       #POST /api/rewards
       post do
+        service = ::Rewards::Assigner.new(current_user, params)
+        if service.run
+          present service.reward
+        else
+          error!({ messages: service.errors.full_messages }, 500)
+        end
       end
-
     end
   end
 end
