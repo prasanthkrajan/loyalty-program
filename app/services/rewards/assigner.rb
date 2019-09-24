@@ -44,39 +44,14 @@ class Rewards::Assigner
   end
 
   def check_free_coffee_conditions
-    errors.add(:base, 'Cannot claim free coffee') unless (user_birthday_month || accumulated_100_points_in_a_calendar_month) && no_previous_similar_redemption
+    errors.add(:base, 'Cannot claim free coffee') unless Rewards::Validations::FreeCoffee.new(user, params).pass?
   end
 
   def check_cash_rebate_conditions
-    errors.add(:base, 'Cannot claim cash rebate') unless user_spent_more_than_100_in_more_than_10_transactions && no_previous_similar_redemption
+    errors.add(:base, 'Cannot claim cash rebate') unless Rewards::Validations::CashRebate.new(user, params).pass?
   end
 
   def check_movie_ticket_conditions
-    errors.add(:base, 'Cannot claim movie ticket') unless user_spent_1000_in_60_days && no_previous_similar_redemption
-  end
-
-  def user_birthday_month
-    user.date_of_birth.mon == Date.today.mon
-  end
-
-  def accumulated_100_points_in_a_calendar_month
-    user.points.where(created_at: Date.today.beginning_of_month..Date.today.end_of_month).sum(:points_earned).to_i >= 100
-  end
-
-  def no_previous_similar_redemption
-    user.rewards.where(name: params[:name], reward_type: params[:reward_type]).empty?
-  end
-
-  def user_spent_more_than_100_in_more_than_10_transactions
-    user.merchant_transactions.collect{ |s| s.amount >= 100 }.length >= 10
-  end
-
-  def user_spent_1000_in_60_days
-    return false unless first_transaction.present?
-    user.merchant_transactions.where("created_at >= ?", first_transaction.created_at).sum(:amount).to_i >= 1000
-  end
-
-  def first_transaction
-    user.merchant_transactions.first_transaction
+    errors.add(:base, 'Cannot claim movie ticket') unless Rewards::Validations::MovieTicket.new(user, params).pass?
   end
 end
