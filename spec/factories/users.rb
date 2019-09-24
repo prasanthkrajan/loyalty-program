@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :standard_tier_user, class: User do
     email           { Faker::Internet.email }
@@ -6,6 +6,7 @@ FactoryGirl.define do
     loyalty_tier    { 'standard' }
     home_currency   { 'SGD' }
     date_of_birth   { Date.today }
+    created_at      { Date.today - 1.week }
   end
 
   factory :gold_tier_user, parent: :user do

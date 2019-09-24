@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :merchant_one, class: Merchant do
     full_name             { 'MyPhone'  }
