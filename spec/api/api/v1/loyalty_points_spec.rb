@@ -10,7 +10,7 @@ describe API::V1::LoyaltyPoints do
     it 'allows merchant to issue loyalty point to end user, auto calculated based on users transaction amount with merchant' do
       contact_loyalty_points_endpoint(merchant, standard_tier_user.id)
       expect(response).to be_success
-      expect(user.points.sum(:points_earned).to_i).to eq((current_points + (transaction_amount * 0.1)).to_i)
+      expect(standard_tier_user.points.sum(:points_earned).to_i).to eq((current_points + (transaction_amount * 0.1)).to_i)
     end
   end
 

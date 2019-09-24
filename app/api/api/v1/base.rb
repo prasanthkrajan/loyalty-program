@@ -4,5 +4,6 @@ module API::V1
 
     format :json
     mount API::V1::Rewards
+    mount API::V1::LoyaltyPoints
   end
 end
