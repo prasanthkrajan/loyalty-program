@@ -1,4 +1,4 @@
-FactoryBot.define do
+FactoryGirl.define do
 
   factory :transaction_one, class: UserMerchantTransaction do
     currency  { 'SGD' }

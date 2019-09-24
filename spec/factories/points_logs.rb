@@ -1,4 +1,4 @@
-FactoryBot.define do
+FactoryGirl.define do
 
   factory :points_log_one, class: PointsLog do
     points_earned { 2000 }
