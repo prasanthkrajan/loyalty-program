@@ -4,9 +4,9 @@ class Rewards::Assigner
   attr_accessor :user, :errors, :reward
   attr_reader :params
 
-  validate :free_coffee_conditions
-  validate :cash_rebate_conditions
-  validate :movie_ticket_conditions
+  validate :free_coffee_conditions, if: -> {params[:name] == 'Free Coffee'}
+  validate :cash_rebate_conditions, if: -> {params[:name] == 'Cash Rebate'}
+  validate :movie_ticket_conditions, if: -> {params[:name] == 'Movie Ticket'}
 
   def initialize(user, params)
     @user = user
@@ -32,26 +32,14 @@ class Rewards::Assigner
   end
 
   def free_coffee_conditions
-    params[:name] == 'Free Coffee' ? check_free_coffee_conditions : true
-  end
-
-  def cash_rebate_conditions
-    params[:name] == 'Cash Rebate' ? check_cash_rebate_conditions : true
-  end
-
-  def movie_ticket_conditions
-    params[:name] == 'Movie Ticket' ? check_movie_ticket_conditions : true
-  end
-
-  def check_free_coffee_conditions
     errors.add(:base, 'Cannot claim free coffee') unless Rewards::Validations::FreeCoffee.new(user, params).pass?
   end
 
-  def check_cash_rebate_conditions
+  def cash_rebate_conditions
     errors.add(:base, 'Cannot claim cash rebate') unless Rewards::Validations::CashRebate.new(user, params).pass?
   end
 
-  def check_movie_ticket_conditions
+  def movie_ticket_conditions
     errors.add(:base, 'Cannot claim movie ticket') unless Rewards::Validations::MovieTicket.new(user, params).pass?
   end
 end
