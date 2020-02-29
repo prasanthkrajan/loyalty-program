@@ -6,7 +6,7 @@ ruby '2.6.0'
 # basic gems
 gem 'rails', '~> 5.2.3'
 gem 'pg', '>= 0.18', '< 2.0'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 3.12'
 gem 'jbuilder', '~> 2.5'
 gem 'grape'
 
